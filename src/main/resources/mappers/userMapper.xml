@@ -5,23 +5,29 @@
 
 <mapper namespace="com.learn.boardserver.mapper.UserProfileMapper">
     <select id="getUserProfile" resultType="com.learn.boardserver.dto.UserDTO">
-        SELECT userId, password, nickName, createTime, isWithDraw, status
+        SELECT id, userId, password, nickName, createTime, isWithDraw, status
         FROM user
         WHERE userId = #{userId}
     </select>
 
-    <insert id="insertUserProfile" parameterType="com.learn.boardserver.dto.UserDTO">
-        INSERT INTO user(userId, password, nickName, isWithDraw, status, isAdmin)
-        VALUES (#{userId}, #{password}, #{nickName}, #{isWithDraw}, #{status}, #{isAdmin})
+    <insert id="register">
+        INSERT INTO user(userId, password, nickName, isAdmin, createTime, isWithDraw, status)
+        VALUES (#{userId}, #{password}, #{nickName}, #{isAdmin}, #{createTime}, #{isWithDraw}, #{status})
     </insert>
-    
-    <update id="updateUserProfile" parameterType="com.learn.boardserver.dto.UserDTO">
+
+<!--    <update id="updateUserProfile" parameterType="com.learn.boardserver.dto.UserDTO">
         UPDATE user
         SET password=#{password},
             nickName=#{nickName},
             isWithDraw=#{isWithDraw},
             status=#{status}
         WHERE id = #{id}
+    </update>-->
+
+    <update id="updatePassword" parameterType="com.learn.boardserver.dto.UserDTO">
+        UPDATE user
+        SET password = #{password}
+        WHERE userId = #{userId}
     </update>
 
     <delete id="deleteUserProfile" parameterType="com.learn.boardserver.dto.UserDTO">
@@ -43,16 +49,5 @@
         FROM user
         WHERE userId = #{userId}
     </select>
-
-    <update id="updatePassword" parameterType="com.learn.boardserver.dto.UserDTO">
-        UPDATE user
-        SET password = #{password}
-        WHERE userId = #{userId}
-    </update>
-
-    <insert id="register">
-        INSERT INTO user(userId, password, nickName, createTime, isWithDraw, status)
-        VALUES (#{userId}, #{password}, #{nickName}, #{createTime}, #{isWithDraw}, #{status})
-    </insert>
 
 </mapper>

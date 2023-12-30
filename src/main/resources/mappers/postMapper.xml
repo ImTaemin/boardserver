@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.learn.boardserver.mapper.PostMapper">
+    <insert id="register" parameterType="com.learn.boardserver.dto.PostDTO">
+        INSERT INTO post (name, isAdmin, contents, createTime, views, categoryId, userId, fileId, updateTime)
+        VALUES (#{name}, #{isAdmin}, #{contents}, #{createTime}, #{views}, #{categoryId}, #{userId}, #{fileId}, #{updateTime})
+    </insert>
+
+    <select id="getMyPosts" parameterType="int" resultType="com.learn.boardserver.dto.PostDTO" >
+        SELECT id, name, isAdmin, contents, createTime, views, categoryId, userId, fileId, updateTime
+        FROM post
+        WHERE userId = #{userId}
+    </select>
+
+    <update id="updatePost" parameterType="com.learn.boardserver.dto.PostDTO">
+        UPDATE post
+        SET name = #{name},
+            contents = #{contents},
+            views = #{views},
+            userId = #{userId},
+            fileId = #{fileId},
+            updateTime = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deletePost">
+        DELETE
+        FROM post
+        WHERE id = #{postId}
+            AND userId = #{accountId}
+    </delete>
+
+</mapper>
