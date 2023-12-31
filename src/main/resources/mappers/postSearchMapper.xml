@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.learn.boardserver.mapper.PostSearchMapper">
-    <select id="selectPosts" resultType="com.learn.boardserver.dto.request.PostSearchRequest" >
+    <select id="selectPosts" resultType="com.learn.boardserver.dto.request.PostSearchRequest">
         SELECT id, name, isAdmin, contents, createTime, views, categoryId, userId, fileId, updateTime
         FROM post
         WHERE 1=1
@@ -26,5 +26,13 @@
         <if test="sortStatus.toString() == 'CATEGORIES'">
             ORDER BY categoryId
         </if>
+    </select>
+
+    <select id="getPostByTagName" resultType="com.learn.boardserver.dto.request.PostSearchRequest">
+        SELECT p.id, p.name, p.isAdmin, p.contents, p.createTime, p.views, p.categoryId, p.userId, p.fileId, p.updateTime
+        FROM post p, posttag pt, tag t
+        WHERE p.id = pt.postId
+        AND pt.tagId = t.id
+        AND t.name = #{tagName}
     </select>
 </mapper>

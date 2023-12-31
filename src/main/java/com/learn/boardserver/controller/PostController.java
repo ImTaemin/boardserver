@@ -1,7 +1,9 @@
 package com.learn.boardserver.controller;
 
 import com.learn.boardserver.aop.LoginCheck;
+import com.learn.boardserver.dto.CommentDTO;
 import com.learn.boardserver.dto.PostDTO;
+import com.learn.boardserver.dto.TagDTO;
 import com.learn.boardserver.dto.UserDTO;
 import com.learn.boardserver.dto.response.CommonResponse;
 import com.learn.boardserver.service.impl.PostServiceImpl;
@@ -83,6 +85,91 @@ public class PostController {
         postService.deletePosts(userInfo.getId(), postId);
 
         CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "deletePosts", postId);
+        return ResponseEntity.ok(commonResponse);
+    }
+
+    // -- comments --
+    @PostMapping("comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<CommonResponse<CommentDTO>> registerPostComment(String accountId, @RequestBody CommentDTO commentDTO) {
+        postService.registerComment(commentDTO);
+
+        CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "registerPostComment", commentDTO);
+        return ResponseEntity.ok(commonResponse);
+    }
+
+    @PatchMapping("comments/{commentId}")
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<CommonResponse<CommentDTO>> updatePostComment(String accountId,
+                                                                        @PathVariable("commentId") int commentId,
+                                                                        @RequestBody CommentDTO commentDTO) {
+        // 어차피 LoginCheck Aspect에서 로그인 된 상태를 알아 오니 필요 없는 로직 같다.
+//        UserDTO userInfo = userService.getUserInfo(accountId);
+//        if(userInfo != null) {
+//            postService.updateComment(commentDTO);
+//        }
+
+        postService.updateComment(commentDTO);
+
+        CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "updatePostComment", commentDTO);
+        return ResponseEntity.ok(commonResponse);
+    }
+
+    @DeleteMapping("comments/{commentId}")
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<CommonResponse<CommentDTO>> deletePostComment(String accountId,
+                                                                        @PathVariable("commentId") int commentId,
+                                                                        @RequestBody CommentDTO commentDTO) {
+        UserDTO userInfo = userService.getUserInfo(accountId);
+        if(userInfo == null) {
+            log.error("Controller: deletePostComment ERROR! {}", commentDTO);
+            throw new RuntimeException("deletePosts ERROR! 컨틀롤러 댓글 삭제 메서드를 확인해주세요" + commentDTO);
+        }
+
+        postService.deletePostComment(userInfo.getId(), commentId);
+
+        CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "deletePostComment", commentDTO);
+        return ResponseEntity.ok(commonResponse);
+    }
+
+    // tags
+    @PostMapping("tags")
+    @ResponseStatus(HttpStatus.CREATED)
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<CommonResponse<TagDTO>> registerPostTag(String accountId, @RequestBody TagDTO tagDTO) {
+        postService.registerTag(tagDTO);
+
+        CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "registerPostTag", tagDTO);
+        return ResponseEntity.ok(commonResponse);
+    }
+
+    @PatchMapping("tags/{tagId}")
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<CommonResponse<TagDTO>> updatePostTag(String accountId,
+                                                                @PathVariable("tagId") int tagId,
+                                                                @RequestBody TagDTO tagDTO) {
+        tagDTO.setId(tagId);
+        postService.updateTag(tagDTO);
+
+        CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "updatePostTag", tagDTO);
+        return ResponseEntity.ok(commonResponse);
+    }
+
+    @DeleteMapping("tags/{tagId}")
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<CommonResponse<TagDTO>> deletePostTag(String accountId,
+                                                                @PathVariable("tagId") int tagId,
+                                                                @RequestBody TagDTO tagDTO) {
+        UserDTO userInfo = userService.getUserInfo(accountId);
+        if(userInfo == null) {
+            log.error("Controller: deletePostTag ERROR! {}", tagDTO);
+            throw new RuntimeException("deletePostTag ERROR! 컨틀롤러 태그 삭제 메서드를 확인해주세요" + tagDTO);
+        }
+
+        postService.deletePostTag(userInfo.getId(), tagId);
+
+        CommonResponse commonResponse = new CommonResponse(HttpStatus.OK, "SUCCESS", "deletePostTag", tagDTO);
         return ResponseEntity.ok(commonResponse);
     }
 
