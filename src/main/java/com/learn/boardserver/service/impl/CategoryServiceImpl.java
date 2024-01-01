@@ -25,17 +25,31 @@ public class CategoryServiceImpl implements CategoryService {
             throw new RuntimeException("register ERROR! 게시글 카테고리 등록 메서드를 확인해주세요" + categoryDTO);
         }
 
-        categoryMapper.register(categoryDTO);
+        try {
+            categoryMapper.register(categoryDTO);
+        } catch (RuntimeException e) {
+            log.error("register ERROR! {}", categoryDTO);
+            throw new RuntimeException("register ERROR! 게시글 카테고리 등록 메서드를 확인해주세요" + categoryDTO);
+        }
+
+//        categoryMapper.register(categoryDTO);
     }
 
     @Override
     public void update(CategoryDTO categoryDTO) {
-        if (categoryDTO == null) {
+        if (categoryDTO == null || categoryDTO.getName() == null) {
             log.error("update ERROR! {}", categoryDTO);
             throw new RuntimeException("update ERROR! 게시글 카테고리 수정 메서드를 확인해주세요" + categoryDTO);
         }
 
-        categoryMapper.updateCategory(categoryDTO);
+        try {
+            categoryMapper.updateCategory(categoryDTO);
+        } catch (RuntimeException e) {
+            log.error("register ERROR! {}", categoryDTO);
+            throw new RuntimeException("register ERROR! 게시글 카테고리 수정 메서드를 확인해주세요" + categoryDTO);
+        }
+
+//        categoryMapper.updateCategory(categoryDTO);
 
     }
 
@@ -45,7 +59,13 @@ public class CategoryServiceImpl implements CategoryService {
             log.error("delete ERROR! {}", categoryId);
             throw new RuntimeException("delete ERROR! 게시글 카테고리 삭제 메서드를 확인해주세요" + categoryId);
         }
+        try {
+            categoryMapper.deleteCategory(categoryId);
+        } catch (RuntimeException e) {
+            log.error("delete ERROR! {}", categoryId);
+            throw new RuntimeException("delete ERROR! 게시글 카테고리 삭제 메서드를 확인해주세요" + categoryId);
+        }
 
-        categoryMapper.deleteCategory(categoryId);
+//        categoryMapper.deleteCategory(categoryId);
     }
 }

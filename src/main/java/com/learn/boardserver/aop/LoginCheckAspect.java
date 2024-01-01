@@ -39,7 +39,7 @@ public class LoginCheckAspect {
         }
 
         if(id == null) {
-            log.error(joinPoint.toString() + "accountName : " + id);
+            log.info(joinPoint.toString() + "accountName : " + id);
             throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 ID값을 확인해주세요") {};
         }
         

@@ -41,24 +41,51 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException("register ERROR! 게시글 등록 메서드를 확인해주세요" + userInfo);
         }
 
-        postDTO.setUserId(userInfo.getId());
-        postDTO.setCreateTime(new Date());
-        postMapper.register(postDTO);
+        try {
+            postDTO.setUserId(userInfo.getId());
+            postDTO.setCreateTime(new Date());
+            postMapper.register(postDTO);
 
-        Integer postId = postDTO.getId();
-        List<TagDTO> tagDTOList = postDTO.getTagDTOList();
-        if(tagDTOList != null) {
-            for (TagDTO tagDTO : tagDTOList) {
-                tagMapper.register(tagDTO);
-                Integer tagId = tagDTO.getId();
-                tagMapper.createPostTag(tagId, postId);
+            Integer postId = postDTO.getId();
+            List<TagDTO> tagDTOList = postDTO.getTagDTOList();
+            if(tagDTOList != null) {
+                for (TagDTO tagDTO : tagDTOList) {
+                    tagMapper.register(tagDTO);
+                    Integer tagId = tagDTO.getId();
+                    tagMapper.createPostTag(tagId, postId);
+                }
             }
+        } catch (RuntimeException e) {
+            log.error("register ERROR! {}", userInfo);
+            throw new RuntimeException("register ERROR! 게시글 등록 메서드를 확인해주세요" + userInfo);
         }
+
+//        postDTO.setUserId(userInfo.getId());
+//        postDTO.setCreateTime(new Date());
+//        postMapper.register(postDTO);
+//
+//        Integer postId = postDTO.getId();
+//        List<TagDTO> tagDTOList = postDTO.getTagDTOList();
+//        if(tagDTOList != null) {
+//            for (TagDTO tagDTO : tagDTOList) {
+//                tagMapper.register(tagDTO);
+//                Integer tagId = tagDTO.getId();
+//                tagMapper.createPostTag(tagId, postId);
+//            }
+//        }
     }
 
     @Override
     public List<PostDTO> getMyPosts(int accountId) {
-        List<PostDTO> postDTOList = postMapper.getMyPosts(accountId);
+//        List<PostDTO> postDTOList = postMapper.getMyPosts(accountId);
+
+        List<PostDTO> postDTOList = null;
+        try {
+            postDTOList = postMapper.getMyPosts(accountId);
+        } catch (RuntimeException e) {
+            log.error("getMyPosts ERROR! {}", accountId);
+            throw new RuntimeException("getMyPosts ERROR! 게시글 조회 메서드를 확인해주세요" + accountId);
+        }
 
         return postDTOList;
     }
@@ -70,7 +97,14 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException("updatePosts ERROR! 게시글 수정 메서드를 확인해주세요" + postDTO);
         }
 
-        postMapper.updatePost(postDTO);
+        try {
+            postMapper.updatePost(postDTO);
+        } catch (RuntimeException e) {
+            log.error("updatePosts ERROR! {}", postDTO);
+            throw new RuntimeException("updatePosts ERROR! 게시글 수정 메서드를 확인해주세요" + postDTO);
+        }
+
+//        postMapper.updatePost(postDTO);
     }
 
     @Override
@@ -80,7 +114,14 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException("deletePosts ERROR! 게시글 삭제 메서드를 확인해주세요" + postId);
         }
 
-        postMapper.deletePost(userId, postId);
+        try {
+            postMapper.deletePost(userId, postId);
+        } catch (RuntimeException e) {
+            log.error("deletePosts ERROR! {}", postId);
+            throw new RuntimeException("deletePosts ERROR! 게시글 삭제 메서드를 확인해주세요" + postId);
+        }
+
+//        postMapper.deletePost(userId, postId);
     }
 
     @Override

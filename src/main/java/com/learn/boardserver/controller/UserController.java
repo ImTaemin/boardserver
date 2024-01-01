@@ -10,6 +10,7 @@ import com.learn.boardserver.dto.response.UserInfoResponse;
 import com.learn.boardserver.service.impl.UserServiceImpl;
 import com.learn.boardserver.utils.SessionUtil;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("sign-in")
-    public HttpStatus login(@RequestBody UserLoginRequest userLoginRequest, HttpSession session) {
+    public HttpStatus login(@Valid @RequestBody UserLoginRequest userLoginRequest, HttpSession session) {
         ResponseEntity<LoginResponse> responseEntity = null;
         String id = userLoginRequest.getUserId();
         String password = userLoginRequest.getPassword();

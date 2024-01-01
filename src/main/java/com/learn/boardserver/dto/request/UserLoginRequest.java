@@ -1,14 +1,18 @@
 package com.learn.boardserver.dto.request;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Setter
 @Getter
 public class UserLoginRequest {
-    @NonNull
+    @Valid
+    @NotNull
     private String userId;
-    @NonNull
+
+    @Valid
+    @NotNull
     private String password;
 }
