@@ -2,11 +2,13 @@ package com.learn.boardserver.service.impl;
 
 import com.learn.boardserver.dto.PostDTO;
 import com.learn.boardserver.dto.request.PostSearchRequest;
+import com.learn.boardserver.exception.BoardServerException;
 import com.learn.boardserver.mapper.PostSearchMapper;
 import com.learn.boardserver.service.PostSearchService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ public class PostSearchServiceImpl implements PostSearchService {
             postDTOList = postSearchMapper.selectPosts(postSearchRequest);
         } catch (RuntimeException e) {
             log.error("getPosts 메서드 실패", e.getMessage());
+            throw new BoardServerException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
         return postDTOList;

@@ -15,6 +15,10 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	all {
+		// 스프링부트 기본 로깅 제외
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
 }
 
 repositories {
@@ -26,9 +30,10 @@ dependencies {
 	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '3.1.2'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.1.2'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '3.2.1'
-
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
 
 	compileOnly 'org.projectlombok:lombok'
