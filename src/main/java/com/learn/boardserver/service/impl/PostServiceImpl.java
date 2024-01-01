@@ -46,10 +46,13 @@ public class PostServiceImpl implements PostService {
         postMapper.register(postDTO);
 
         Integer postId = postDTO.getId();
-        for(TagDTO tagDTO : postDTO.getTagDTOList()) {
-            tagMapper.register(tagDTO);
-            Integer tagId = tagDTO.getId();
-            tagMapper.createPostTag(tagId, postId);
+        List<TagDTO> tagDTOList = postDTO.getTagDTOList();
+        if(tagDTOList != null) {
+            for (TagDTO tagDTO : tagDTOList) {
+                tagMapper.register(tagDTO);
+                Integer tagId = tagDTO.getId();
+                tagMapper.createPostTag(tagId, postId);
+            }
         }
     }
 
